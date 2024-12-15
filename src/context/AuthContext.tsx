@@ -1,9 +1,9 @@
-// src/context/AuthContext.tsx
+'use client'
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { apiRequest } from '@/request/apiRequest';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { useRouter } from 'next/router';
 import { AuthContextType, UserType } from '@/types/context/auth';
+import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
