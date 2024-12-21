@@ -1,0 +1,206 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  cuidador
+  responsavel
+  vulneravel
+}
+
+enum AppointmentStatus {
+  agendado
+  em_andamento
+  concluido
+  cancelado
+  troca_urgente
+}
+
+enum AvailabilityStatus {
+  disponivel
+  agendado
+  cancelado
+  troca_urgente
+  extra
+  cancelamento
+}
+
+enum RoleName {
+  lider_responsavel
+  lider_vulneravel
+  cuidador
+}
+
+model User {
+  id              Int                  @id @default(autoincrement())
+  email           String               @unique
+  password        String
+  type            UserType
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  notifications   Notification[]
+  userRoles       UserRoleAssignment[]
+  Caregiver       Caregiver[]
+  ResponsibleUser ResponsibleUser[]
+  VulnerableUser  VulnerableUser[]
+}
+
+model Caregiver {
+  id               Int                    @id @default(autoincrement())
+  userId           Int                    @unique
+  user             User                   @relation(fields: [userId], references: [id])
+  emergencyContact String?
+  serviceTypes     CaregiverServiceType[]
+  availability     Availability[]
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  appointments     Appointment[]
+}
+
+model ResponsibleUser {
+  id              Int                         @id @default(autoincrement())
+  userId          Int                         @unique
+  user            User                        @relation(fields: [userId], references: [id])
+  vulnerableUsers VulnerableUserResponsible[]
+  createdAt       DateTime                    @default(now())
+  updatedAt       DateTime                    @updatedAt
+  appointments    Appointment[]
+}
+
+model VulnerableUser {
+  id               Int                         @id @default(autoincrement())
+  userId           Int                         @unique
+  user             User                        @relation(fields: [userId], references: [id])
+  responsibleUsers VulnerableUserResponsible[]
+  serviceTypes     VulnerableUserServiceType[]
+  appointments     Appointment[]
+  createdAt        DateTime                    @default(now())
+  updatedAt        DateTime                    @updatedAt
+}
+
+model Role {
+  id            Int                  @id @default(autoincrement())
+  name          RoleName             @unique
+  userRoles     UserRoleAssignment[]
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  notifications Notification[]
+}
+
+model UserRoleAssignment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  roleId    Int
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, roleId])
+}
+
+model ServiceType {
+  id              Int                         @id @default(autoincrement())
+  name            String                      @unique
+  description     String?
+  createdAt       DateTime                    @default(now())
+  updatedAt       DateTime                    @updatedAt
+  caregivers      CaregiverServiceType[]
+  vulnerableUsers VulnerableUserServiceType[]
+}
+
+model CaregiverServiceType {
+  id            Int         @id @default(autoincrement())
+  caregiverId   Int
+  caregiver     Caregiver   @relation(fields: [caregiverId], references: [id])
+  serviceTypeId Int
+  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([caregiverId, serviceTypeId])
+}
+
+model VulnerableUserServiceType {
+  id               Int            @id @default(autoincrement())
+  vulnerableUserId Int
+  vulnerableUser   VulnerableUser @relation(fields: [vulnerableUserId], references: [id])
+  serviceTypeId    Int
+  serviceType      ServiceType    @relation(fields: [serviceTypeId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@unique([vulnerableUserId, serviceTypeId])
+}
+
+model VulnerableUserResponsible {
+  id                Int             @id @default(autoincrement())
+  responsibleUserId Int
+  responsibleUser   ResponsibleUser @relation(fields: [responsibleUserId], references: [id])
+  vulnerableUserId  Int
+  vulnerableUser    VulnerableUser  @relation(fields: [vulnerableUserId], references: [id])
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@unique([responsibleUserId, vulnerableUserId])
+}
+
+model Availability {
+  id          Int                @id @default(autoincrement())
+  day         DateTime
+  startTime   String
+  endTime     String
+  status      AvailabilityStatus @default(disponivel)
+  extraHours  Int?               @default(0) // Quantidade de horas extras
+  extraValue  Float? // Valor total das horas extras
+  caregiverId Int
+  caregiver   Caregiver          @relation(fields: [caregiverId], references: [id])
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  appointment Appointment[]
+}
+
+model Appointment {
+  id                    Int               @id @default(autoincrement())
+  startTime             DateTime
+  endTime               DateTime
+  status                AppointmentStatus @default(agendado)
+  availabilityId        Int
+  availability          Availability      @relation(fields: [availabilityId], references: [id])
+  caregiverId           Int
+  caregiver             Caregiver         @relation(fields: [caregiverId], references: [id])
+  responsibleUserId     Int
+  responsibleUser       ResponsibleUser   @relation(fields: [responsibleUserId], references: [id])
+  vulnerableUserId      Int
+  vulnerableUser        VulnerableUser    @relation(fields: [vulnerableUserId], references: [id])
+  note                  String?
+  caregiverScore        Int?
+  caregiverTemperature  String?
+  familyCareScore       Int?
+  familyCareTemperature String?
+  caregiverScoreDate    DateTime?
+  familyCareScoreDate   DateTime?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  roleId    Int?
+  role      Role?    @relation(fields: [roleId], references: [id])
+  type      String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([roleId])
+}
