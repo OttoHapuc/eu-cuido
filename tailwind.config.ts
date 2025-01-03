@@ -6,6 +6,15 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  theme: {},
+  theme: {
+    extend: {
+      colors: {
+        "primary-color": "var(--primary-color)",
+        "secondary-color": "var(--secondary-color)",
+        "tertiary-color": "var(--tertiary-color)",
+        "text-color": "var(--text-color)",
+      },
+    },
+  },
   plugins: [],
 } satisfies Config;
