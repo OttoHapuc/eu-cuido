@@ -5,11 +5,11 @@ import Footer from '@/components/organisms/Footer';
 
 const HomePage: React.FC = () => {
 return (
- <div>
+ <>
    <HeroSection />
    <FeaturesSection />
    <Footer />
- </div>
+ </>
 );
 };
 
