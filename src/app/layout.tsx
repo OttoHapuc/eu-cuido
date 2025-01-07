@@ -29,13 +29,14 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        data-theme="blue"
       >
-        <ModalProvider>
-          <AuthProvider>
+        <AuthProvider>
+          <ModalProvider>
             <Navbar />
             {children}
-          </AuthProvider>
-        </ModalProvider>
+          </ModalProvider>
+        </AuthProvider>
       </body>
     </html>
   );
