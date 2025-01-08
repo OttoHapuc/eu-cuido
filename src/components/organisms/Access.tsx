@@ -12,7 +12,7 @@ const Access: React.FC = () => {
     <>
       {isLogin ? <Login /> : <Register />}
       <Button onClick={() => setIsLogin(!isLogin)} default={true} className="mt-4 hover:underline underline-offset-2 secondary-text">
-        {isLogin ? "Possuo um acesso" : "Realizar registro"}
+        {!isLogin ? "Possuo um acesso" : "Realizar registro"}
       </Button>
     </>
   );
