@@ -18,12 +18,12 @@ const Register: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      const token = await apiRequest({
+      const response = await apiRequest<{ token: string }>({
         method: "POST",
         url: "/auth/register",
         data: { name, email, password },
       });
-      login(token);
+      login(response.token);
       hideModal();
       alert("Usuário cadastrado com sucesso, realize login!");
     } catch (err: any) {
