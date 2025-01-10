@@ -1,5 +1,5 @@
 'use client'
-import Overlay from "@/components/atoms/OverLay";
+import Overlay from "@/components/atoms/Overlay";
 import ModalContent from "@/components/molecules/ModalContent";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 interface ModalContextProps {
