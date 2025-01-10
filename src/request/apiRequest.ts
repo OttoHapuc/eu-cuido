@@ -10,7 +10,7 @@ export const apiRequest = async <T = any>({
   try {
     const response = await axiosInstance.request<T>({
       method,
-      url,
+      url: '/api' + url,
       data,
       params,
       headers,
