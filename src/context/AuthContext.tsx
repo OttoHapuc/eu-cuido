@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const userData = await apiRequest<UserType>({
         method: 'GET',
-        url: '/users/me',
+        url: '/auth/me',
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(userData);
