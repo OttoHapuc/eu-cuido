@@ -4,7 +4,7 @@ export class InternalServerError extends CustomError {
     constructor(
         message: string = 'Server error',
         errorCode: number = 500,
-        originalError?: Error,
+        originalError?: Error
     ) {
         super(message, 500, errorCode, originalError);
     }

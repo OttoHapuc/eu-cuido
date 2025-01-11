@@ -1,8 +1,7 @@
-import { HTMLAttributes } from "react";
-
-export type ImageProps = HTMLAttributes<HTMLImageElement> & {
+export interface ImageProps {
     src: string;
     alt: string;
-    width?: number | string;
-    height?: number | string;
+    width: number;
+    height: number;
+    className?: string;
 }

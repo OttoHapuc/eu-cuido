@@ -9,7 +9,7 @@ export class CustomError extends Error {
         message: string = 'No Response!',
         statusCode: number = 444,
         errorCode: number = 444,
-        originalError?: Error,
+        originalError?: Error
     ) {
         super(message);
 

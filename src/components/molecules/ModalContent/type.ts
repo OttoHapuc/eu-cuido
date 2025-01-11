@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export interface ModalContentProps {
-  children: ReactNode;
-  show: boolean;
+    children: ReactNode;
+    show: boolean;
 }

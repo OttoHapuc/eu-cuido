@@ -1,3 +1,4 @@
+import { ZodIssue } from 'zod';
 import { CustomError } from '../CustomError';
 
 export class UnprocessableEntity extends CustomError {
@@ -5,7 +6,7 @@ export class UnprocessableEntity extends CustomError {
         message: string = 'Unprocessable Entity',
         errorCode: number = 422,
         originalError?: Error,
-        public issues?: []
+        public issues?: ZodIssue[]
     ) {
         super(message, 422, errorCode, originalError);
     }

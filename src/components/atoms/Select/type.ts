@@ -1,9 +1,9 @@
-import { SelectHTMLAttributes } from "react"
+import { SelectHTMLAttributes } from 'react';
 
 type Option = {
     value: string;
     label: string;
-}
+};
 
 export type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
     id: string;
@@ -11,4 +11,4 @@ export type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
     options: (string | Option)[];
     onChange?: (value: string) => void;
     value?: string;
-}
+};

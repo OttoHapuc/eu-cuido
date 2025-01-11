@@ -4,7 +4,7 @@ export class NotAcceptable extends CustomError {
     constructor(
         message: string = 'Not Acceptable',
         errorCode: number = 406,
-        originalError?: Error,
+        originalError?: Error
     ) {
         super(message, 406, errorCode, originalError);
     }

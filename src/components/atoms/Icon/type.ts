@@ -1,4 +1,4 @@
 export interface IconProps {
-  icon: React.ReactNode;
-  className?: string;
+    icon: React.ReactNode;
+    className?: string;
 }
