@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { apiRequest } from '@/request/apiRequest';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { AuthContextType, UserType } from '@/types/context/auth';
+import { AuthContextType, UserType } from '@/types/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

@@ -1,15 +1,8 @@
 'use client'
 import Overlay from "@/components/atoms/Overlay";
 import ModalContent from "@/components/molecules/ModalContent";
+import { ModalContextProps, ModalOptions } from "@/types/context/ModalProvider";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-interface ModalContextProps {
-  showModal: (content: ReactNode, options?: ModalOptions) => void;
-  hideModal: () => void;
-}
-
-interface ModalOptions {
-  backgroundOpacity?: boolean;
-}
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 
