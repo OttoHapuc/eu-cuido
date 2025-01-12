@@ -1,4 +1,4 @@
-import { meController } from '@/server/modules/auth/auth.controller';
+import { meController } from '@/server';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
