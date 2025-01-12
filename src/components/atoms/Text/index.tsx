@@ -12,7 +12,7 @@ const Text: FC<TextProps> = ({
     const Tag = type;
 
     const textClasses = clsx(
-        'mb-2 text-text-color',
+        'mb-2',
         {
             'text-2xl font-bold': type === 'h1',
             'text-xl font-bold': type === 'h2',
@@ -22,7 +22,7 @@ const Text: FC<TextProps> = ({
             'text-xs font-bold': type === 'h6',
             'text-base': type === 'span',
         },
-        className
+        className ?? 'text-text-color'
     );
 
     return (

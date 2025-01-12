@@ -25,7 +25,7 @@ const Login: React.FC = () => {
             login(response.token);
             hideModal();
         } catch (err: any) {
-            setError(err);
+            setError("Usuário ou senha inválidos");
         }
     };
 
@@ -47,7 +47,7 @@ const Login: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                {error && <Text className="text-red-500">{error}</Text>}
+                {error && <Text className="text-red-500 text-sm">{error}</Text>}
                 <Button type="submit">Entrar</Button>
             </form>
         </div>
