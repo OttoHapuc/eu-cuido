@@ -5,7 +5,7 @@ export const userTransform = (user: User): Omit<User, 'password'> => {
         id: user.id,
         name: user.name,
         email: user.email,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
     };
 };
