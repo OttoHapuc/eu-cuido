@@ -3,51 +3,51 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #2e51a2;
-  --secondary-color: #6395e2;
-  --tertiary-color: #b2c9f0;
-  --text-color: #0d2146;
+    --primary-color: #2e51a2;
+    --secondary-color: #6395e2;
+    --tertiary-color: #b2c9f0;
+    --text-color: #0d2146;
 }
 
-[data-theme="blue"] {
-  --primary-color: #2e51a2;
-  --secondary-color: #6395e2;
-  --tertiary-color: #b2c9f0;
-  --text-color: #0d2146;
+[data-theme='blue'] {
+    --primary-color: #2e51a2;
+    --secondary-color: #6395e2;
+    --tertiary-color: #b2c9f0;
+    --text-color: #0d2146;
 }
 
-[data-theme="green"] {
-  --primary-color: #2d7631;
-  --secondary-color: #62b466;
-  --tertiary-color: #b4e2b6;
-  --text-color: #123c17;
+[data-theme='green'] {
+    --primary-color: #2d7631;
+    --secondary-color: #62b466;
+    --tertiary-color: #b4e2b6;
+    --text-color: #123c17;
 }
 
 /* Classes */
 .primary-background {
-  background-color: var(--primary-color);
+    background-color: var(--primary-color);
 }
 
 .secondary-background {
-  background-color: var(--secondary-color);
+    background-color: var(--secondary-color);
 }
 
 .tertiary-background {
-  background-color: var(--tertiary-color);
+    background-color: var(--tertiary-color);
 }
 
 .primary-text {
-  color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 .secondary-text {
-  color: var(--secondary-color);
+    color: var(--secondary-color);
 }
 
 .tertiary-text {
-  color: var(--tertiary-color);
+    color: var(--tertiary-color);
 }
 
 .text-color {
-  color: var(--text-color);
+    color: var(--text-color);
 }
