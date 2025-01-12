@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { UserLoginDto, UserRegisterDto } from './types';
+import { UserLoginDto, UserRegisterDto } from './auth.types';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { userTransform } from './auth.transform';

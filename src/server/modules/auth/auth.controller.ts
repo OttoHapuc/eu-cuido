@@ -1,6 +1,6 @@
 import { loginDto, registerDto } from './auth.dto';
 import { loginService, meService, registerService } from './auth.service';
-import { LoginResponseDto } from './types';
+import { LoginResponseDto } from './auth.types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const loginController = async (req: NextRequest): Promise<Response> => {

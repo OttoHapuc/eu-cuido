@@ -1,4 +1,4 @@
-import { User } from './types';
+import { User } from './auth.types';
 
 export const userTransform = (user: User): Omit<User, 'password'> => {
     return {

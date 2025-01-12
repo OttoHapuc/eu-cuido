@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UserLoginDto, UserRegisterDto } from './types';
+import { UserLoginDto, UserRegisterDto } from './auth.types';
 import { UnprocessableEntity } from '@/error';
 
 const loginSchema = z.object({
