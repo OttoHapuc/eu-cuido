@@ -7,13 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserType {
-  cuidador
-  responsavel
-  vulneravel
-}
-
-enum AppointmentStatus {
+enum appointment_status {
   agendado
   em_andamento
   concluido
@@ -21,7 +15,9 @@ enum AppointmentStatus {
   troca_urgente
 }
 
-enum AvailabilityStatus {
+enum availability_status {
+  entrevista
+  indisponivel
   disponivel
   agendado
   cancelado
@@ -30,177 +26,238 @@ enum AvailabilityStatus {
   cancelamento
 }
 
-enum RoleName {
+enum role_name {
   lider_responsavel
   lider_vulneravel
   cuidador
 }
 
-model User {
-  id              Int                  @id @default(autoincrement())
-  email           String               @unique
-  password        String
-  type            UserType
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
-  notifications   Notification[]
-  userRoles       UserRoleAssignment[]
-  Caregiver       Caregiver[]
-  ResponsibleUser ResponsibleUser[]
-  VulnerableUser  VulnerableUser[]
+model user {
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String    @unique
+  password   String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  address           address[]
+  notifications     notification[]
+  user_roles        user_role_assignment[]
+  caregivers        caregiver[]
+  responsible_users responsible_user[]
+  vulnerable_users  vulnerable_user[]
 }
 
-model Caregiver {
-  id               Int                    @id @default(autoincrement())
-  userId           Int                    @unique
-  user             User                   @relation(fields: [userId], references: [id])
-  emergencyContact String?
-  serviceTypes     CaregiverServiceType[]
-  availability     Availability[]
-  createdAt        DateTime               @default(now())
-  updatedAt        DateTime               @updatedAt
-  appointments     Appointment[]
+model address {
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  street       String
+  number       String?
+  complement   String?
+  neighborhood String?
+  city         String
+  state        String
+  zip_code     String
+  primary      Boolean   @default(true)
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  deleted_at   DateTime?
+
+  user   user            @relation(fields: [user_id], references: [id])
+  phones address_phone[]
 }
 
-model ResponsibleUser {
-  id              Int                         @id @default(autoincrement())
-  userId          Int                         @unique
-  user            User                        @relation(fields: [userId], references: [id])
-  vulnerableUsers VulnerableUserResponsible[]
-  createdAt       DateTime                    @default(now())
-  updatedAt       DateTime                    @updatedAt
-  appointments    Appointment[]
+model address_phone {
+  id           Int       @id @default(autoincrement())
+  code         String
+  address_id   Int
+  phone        String
+  is_emergency Boolean   @default(false)
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  deleted_at   DateTime?
+
+  address address @relation(fields: [address_id], references: [id])
 }
 
-model VulnerableUser {
-  id               Int                         @id @default(autoincrement())
-  userId           Int                         @unique
-  user             User                        @relation(fields: [userId], references: [id])
-  responsibleUsers VulnerableUserResponsible[]
-  serviceTypes     VulnerableUserServiceType[]
-  appointments     Appointment[]
-  createdAt        DateTime                    @default(now())
-  updatedAt        DateTime                    @updatedAt
+model caregiver {
+  id                Int       @id @default(autoincrement())
+  user_id           Int       @unique
+  emergency_contact String?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  deleted_at        DateTime?
+
+  user           user                     @relation(fields: [user_id], references: [id])
+  service_types  caregiver_service_type[]
+  availabilities availability[]
+  appointments   appointments[]
 }
 
-model Role {
-  id            Int                  @id @default(autoincrement())
-  name          RoleName             @unique
-  userRoles     UserRoleAssignment[]
-  createdAt     DateTime             @default(now())
-  updatedAt     DateTime             @updatedAt
-  notifications Notification[]
+model responsible_user {
+  id         Int       @id @default(autoincrement())
+  user_id    Int       @unique
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  user             user                          @relation(fields: [user_id], references: [id])
+  vulnerable_users vulnerable_user_responsible[]
+  appointments     appointments[]
 }
 
-model UserRoleAssignment {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  roleId    Int
-  role      Role     @relation(fields: [roleId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model vulnerable_user {
+  id         Int       @id @default(autoincrement())
+  user_id    Int       @unique
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
 
-  @@unique([userId, roleId])
+  user              user                           @relation(fields: [user_id], references: [id])
+  responsible_users vulnerable_user_responsible[]
+  service_types     vulnerable_user_service_type[]
+  appointments      appointments[]
 }
 
-model ServiceType {
-  id              Int                         @id @default(autoincrement())
-  name            String                      @unique
-  description     String?
-  createdAt       DateTime                    @default(now())
-  updatedAt       DateTime                    @updatedAt
-  caregivers      CaregiverServiceType[]
-  vulnerableUsers VulnerableUserServiceType[]
+model role {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  name          role_name              @unique
+  user_roles    user_role_assignment[]
+  notifications notification[]
 }
 
-model CaregiverServiceType {
-  id            Int         @id @default(autoincrement())
-  caregiverId   Int
-  caregiver     Caregiver   @relation(fields: [caregiverId], references: [id])
-  serviceTypeId Int
-  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+model user_role_assignment {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  role_id    Int
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
 
-  @@unique([caregiverId, serviceTypeId])
+  user user @relation(fields: [user_id], references: [id])
+  role role @relation(fields: [role_id], references: [id])
+
+  @@unique([user_id, role_id])
 }
 
-model VulnerableUserServiceType {
-  id               Int            @id @default(autoincrement())
-  vulnerableUserId Int
-  vulnerableUser   VulnerableUser @relation(fields: [vulnerableUserId], references: [id])
-  serviceTypeId    Int
-  serviceType      ServiceType    @relation(fields: [serviceTypeId], references: [id])
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+model service_type {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  deleted_at  DateTime?
 
-  @@unique([vulnerableUserId, serviceTypeId])
+  caregivers       caregiver_service_type[]
+  vulnerable_users vulnerable_user_service_type[]
 }
 
-model VulnerableUserResponsible {
-  id                Int             @id @default(autoincrement())
-  responsibleUserId Int
-  responsibleUser   ResponsibleUser @relation(fields: [responsibleUserId], references: [id])
-  vulnerableUserId  Int
-  vulnerableUser    VulnerableUser  @relation(fields: [vulnerableUserId], references: [id])
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+model caregiver_service_type {
+  id                 Int       @id @default(autoincrement())
+  caregiver_id       Int
+  service_type_id    Int
+  classification     Int       @default(0)
+  services_performed Int       @default(0)
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  deleted_at         DateTime?
 
-  @@unique([responsibleUserId, vulnerableUserId])
+  caregiver    caregiver    @relation(fields: [caregiver_id], references: [id])
+  service_type service_type @relation(fields: [service_type_id], references: [id])
+
+  @@unique([caregiver_id, service_type_id])
 }
 
-model Availability {
-  id          Int                @id @default(autoincrement())
-  day         DateTime
-  startTime   String
-  endTime     String
-  status      AvailabilityStatus @default(disponivel)
-  extraHours  Int?               @default(0) // Quantidade de horas extras
-  extraValue  Float? // Valor total das horas extras
-  caregiverId Int
-  caregiver   Caregiver          @relation(fields: [caregiverId], references: [id])
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  appointment Appointment[]
+model vulnerable_user_service_type {
+  id                 Int       @id @default(autoincrement())
+  vulnerable_user_id Int
+  service_type_id    Int
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  deleted_at         DateTime?
+
+  vulnerable_user vulnerable_user @relation(fields: [vulnerable_user_id], references: [id])
+  service_type    service_type    @relation(fields: [service_type_id], references: [id])
+
+  @@unique([vulnerable_user_id, service_type_id])
 }
 
-model Appointment {
-  id                    Int               @id @default(autoincrement())
-  startTime             DateTime
-  endTime               DateTime
-  status                AppointmentStatus @default(agendado)
-  availabilityId        Int
-  availability          Availability      @relation(fields: [availabilityId], references: [id])
-  caregiverId           Int
-  caregiver             Caregiver         @relation(fields: [caregiverId], references: [id])
-  responsibleUserId     Int
-  responsibleUser       ResponsibleUser   @relation(fields: [responsibleUserId], references: [id])
-  vulnerableUserId      Int
-  vulnerableUser        VulnerableUser    @relation(fields: [vulnerableUserId], references: [id])
-  note                  String?
-  caregiverScore        Int?
-  caregiverTemperature  String?
-  familyCareScore       Int?
-  familyCareTemperature String?
-  caregiverScoreDate    DateTime?
-  familyCareScoreDate   DateTime?
-  createdAt             DateTime          @default(now())
-  updatedAt             DateTime          @updatedAt
+model vulnerable_user_responsible {
+  id                  Int       @id @default(autoincrement())
+  responsible_user_id Int
+  vulnerable_user_id  Int
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+  deleted_at          DateTime?
+
+  responsible_user responsible_user @relation(fields: [responsible_user_id], references: [id])
+  vulnerable_user  vulnerable_user  @relation(fields: [vulnerable_user_id], references: [id])
+
+  @@unique([responsible_user_id, vulnerable_user_id])
 }
 
-model Notification {
-  id        Int      @id @default(autoincrement())
-  userId    Int?
-  user      User?    @relation(fields: [userId], references: [id])
-  roleId    Int?
-  role      Role?    @relation(fields: [roleId], references: [id])
-  type      String
-  message   String
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model availability {
+  id           Int       @id @default(autoincrement())
+  day          DateTime?
+  start_time   String
+  end_time     String
+  extra_hours  Int?      @default(0) // Quantidade de horas extras
+  extra_value  Float? // Valor total das horas extras
+  caregiver_id Int
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  deleted_at   DateTime?
 
-  @@index([userId])
-  @@index([roleId])
+  status       availability_status @default(disponivel)
+  caregiver    caregiver           @relation(fields: [caregiver_id], references: [id])
+  appointments appointments[]
+}
+
+model appointments {
+  id                      Int       @id @default(autoincrement())
+  start_time              DateTime
+  end_time                DateTime
+  availability_id         Int
+  caregiver_id            Int
+  responsible_user_id     Int
+  vulnerable_user_id      Int
+  note                    String?
+  caregiver_score         Int?
+  caregiver_temperature   String?
+  family_care_score       Int?
+  family_care_temperature String?
+  caregiver_score_date    DateTime?
+  family_care_score_date  DateTime?
+  created_at              DateTime  @default(now())
+  updated_at              DateTime  @updatedAt
+  deleted_at              DateTime?
+
+  status           appointment_status @default(agendado)
+  availability     availability       @relation(fields: [availability_id], references: [id])
+  caregiver        caregiver          @relation(fields: [caregiver_id], references: [id])
+  responsible_user responsible_user   @relation(fields: [responsible_user_id], references: [id])
+  vulnerable_user  vulnerable_user    @relation(fields: [vulnerable_user_id], references: [id])
+}
+
+model notification {
+  id         Int       @id @default(autoincrement())
+  user_id    Int?
+  role_id    Int?
+  type       String
+  message    String
+  is_read    Boolean   @default(false)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  user user? @relation(fields: [user_id], references: [id])
+  role role? @relation(fields: [role_id], references: [id])
+
+  @@index([user_id])
+  @@index([role_id])
 }
