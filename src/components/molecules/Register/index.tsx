@@ -27,7 +27,7 @@ const Register: React.FC = () => {
             hideModal();
             alert('Usuário cadastrado com sucesso, realize login!');
         } catch (err: any) {
-            setError(err);
+            setError("Usuário ou senha inválidos");
         }
     };
 

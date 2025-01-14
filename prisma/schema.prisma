@@ -32,14 +32,21 @@ enum role_name {
   cuidador
 }
 
+enum user_status {
+  new
+  in_progress
+  completed
+}
+
 model user {
-  id         Int       @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   name       String
-  email      String    @unique
+  email      String      @unique
   password   String
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
   deleted_at DateTime?
+  status      user_status @default(new)
 
   address           address[]
   notifications     notification[]
@@ -79,6 +86,17 @@ model address_phone {
   deleted_at   DateTime?
 
   address address @relation(fields: [address_id], references: [id])
+}
+
+model onboarding_step {
+  id         Int       @id @default(autoincrement())
+  path       String    @unique
+  role       String
+  page       String    @default("not-defined")
+  order      Int
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
 }
 
 model caregiver {
