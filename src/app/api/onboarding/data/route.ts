@@ -1,4 +1,4 @@
-import { getOnboardingDataController } from '@/server/modules/onboarding/onboarding.controller';
+import { getOnboardingDataController } from '@/server';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
