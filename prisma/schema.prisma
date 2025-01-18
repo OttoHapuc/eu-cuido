@@ -26,12 +26,6 @@ enum availability_status {
   cancelamento
 }
 
-enum role_name {
-  lider_responsavel
-  lider_vulneravel
-  cuidador
-}
-
 enum user_status {
   new
   in_progress
@@ -221,8 +215,8 @@ model role {
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
+  name       String
 
-  name          role_name              @unique
   user_roles    user_role_assignment[]
   notifications notification[]
 }
