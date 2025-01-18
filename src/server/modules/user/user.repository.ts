@@ -39,4 +39,90 @@ export const userRepository = {
             );
         }
     },
+
+    async deleteUserAddress(user_id: number) {
+        try {
+            return await prisma.address.deleteMany({ where: { user_id } });
+        } catch (error: any) {
+            throw new InternalServerError(
+                'Erro de banco de dados, aguarde e tente novamente mais tarde.'
+            );
+        }
+    },
+
+    async createAddress(data: {
+        user_id: number;
+        street: string;
+        number: string;
+        complement?: string;
+        neighborhood: string;
+        city: string;
+        state: string;
+        zip_code: string;
+    }) {
+        try {
+            return await prisma.address.create({ data });
+        } catch (error: any) {
+            throw new InternalServerError(
+                'Erro de banco de dados, aguarde e tente novamente mais tarde.'
+            );
+        }
+    },
+
+    async getAddressByUserId(user_id: number) {
+        try {
+            return await prisma.address.findMany({ where: { user_id } });
+        } catch (error: any) {
+            throw new InternalServerError(
+                'Erro de banco de dados, aguarde e tente novamente mais tarde.'
+            );
+        }
+    },
+
+    async deleteUserRoles(user_id: number) {
+        try {
+            return await prisma.user_role_assignment.deleteMany({
+                where: { user_id },
+            });
+        } catch (error: any) {
+            throw new InternalServerError(
+                'Erro de banco de dados, aguarde e tente novamente mais tarde.'
+            );
+        }
+    },
+
+    async createUserRole(data: { user_id: number; role_id: number }) {
+        try {
+            return await prisma.user_role_assignment.create({ data });
+        } catch (error: any) {
+            throw new InternalServerError(
+                'Erro de banco de dados, aguarde e tente novamente mais tarde.'
+            );
+        }
+    },
+
+    async getUserRoles(user_id: number) {
+        try {
+            return await prisma.user_role_assignment.findMany({
+                where: { user_id },
+                include: {
+                    role: true
+                }
+            });
+        } catch (error: any) {
+            throw new InternalServerError(
+                'Erro de banco de dados, aguarde e tente novamente mais tarde.'
+            );
+        }
+    },
+
+    async getRoles() {
+        try {
+            return await prisma.role.findMany();
+        } catch (error: any) {
+            throw new InternalServerError(
+                'Erro de banco de dados, aguarde e tente novamente mais tarde.'
+            );
+        }
+    }
 };
