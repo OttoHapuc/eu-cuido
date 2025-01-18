@@ -24,6 +24,7 @@ export const getOnboardingDataService = async (keyword: string, authHeader: stri
         }
 
         const config = await onboardingRepository.getOnboardingConfig(keyword);
+        console.log(config)
         if (!config) {
             throw new CustomError('Configuração de onboarding não encontrada', 404);
         }
@@ -45,7 +46,7 @@ export const getOnboardingDataService = async (keyword: string, authHeader: stri
             )
         )).then(results => results.filter(Boolean));
 
-        return { config, userSteps, options };
+        return { ...config, userSteps, options };
     } catch (error: any) {
         throw new CustomError(error);
     }
