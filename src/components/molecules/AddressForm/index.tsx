@@ -56,6 +56,7 @@ const AddressForm: React.FC = () => {
 
                 if (response) {
                     setAddresses(response);
+                    setError('');
                 }
             } catch (err: any) {
                 setError('Erro ao carregar endereços do usuário.');
@@ -81,7 +82,7 @@ const AddressForm: React.FC = () => {
         setAddresses([
             ...addresses,
             {
-                id: crypto.randomUUID(), // Gera um UUID para novos endereços
+                id: crypto.randomUUID(),
                 street: '',
                 number: '',
                 complement: '',
@@ -108,7 +109,6 @@ const AddressForm: React.FC = () => {
                 return;
             }
         }
-        // Remover endereço localmente
         setAddresses(addresses.filter((_, i) => i !== index));
         setLoading(false);
     };
@@ -131,7 +131,7 @@ const AddressForm: React.FC = () => {
 
     return (
         <div className="flex flex-col gap-4 w-full border border-gray-200 rounded-md shadow-sm p-4">
-            {addresses?.map((address, index) => (
+            {addresses.length > 0 && addresses?.map((address, index) => (
                 <div key={address.id} className="border-b pb-4 mb-4">
                     <div className="grid grid-cols-2 gap-4">
                         {formFields.map((field) => (

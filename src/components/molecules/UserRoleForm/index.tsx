@@ -28,6 +28,7 @@ const UserRoleForm: React.FC = () => {
                 if (response?.roles) {
                     setRoles(response.roles);
                     setSelectedRoles(response.user_roles.map((role) => role.role_id));
+                    setError('');
                 }
             } catch (err: any) {
                 setError('Falha ao carregar as roles do usuário.');
