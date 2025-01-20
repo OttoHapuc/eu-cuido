@@ -1,11 +1,13 @@
 import { Unauthorized } from '@/error';
 import { InternalServerError } from '@/error/errors/InternalServerError';
 import { PrismaClient, Prisma } from '@prisma/client';
+import { UserAdressDTO } from './user.types';
+import { UserRegisterDto } from '../auth/auth.types';
 
 const prisma = new PrismaClient();
 
 export const userRepository = {
-    async createUser(data: { name: string; email: string; password: string }) {
+    async createUser(data: UserRegisterDto) {
         try {
             return await prisma.user.create({ data });
         } catch (error: any) {
@@ -50,16 +52,7 @@ export const userRepository = {
         }
     },
 
-    async createAddress(data: {
-        user_id: number;
-        street: string;
-        number: string;
-        complement?: string;
-        neighborhood: string;
-        city: string;
-        state: string;
-        zip_code: string;
-    }) {
+    async createAddress(data: Omit<UserAdressDTO, 'id'> & { user_id: number }) {
         try {
             return await prisma.address.create({ data });
         } catch (error: any) {
@@ -106,8 +99,8 @@ export const userRepository = {
             return await prisma.user_role_assignment.findMany({
                 where: { user_id },
                 include: {
-                    role: true
-                }
+                    role: true,
+                },
             });
         } catch (error: any) {
             throw new InternalServerError(
@@ -124,5 +117,5 @@ export const userRepository = {
                 'Erro de banco de dados, aguarde e tente novamente mais tarde.'
             );
         }
-    }
+    },
 };
