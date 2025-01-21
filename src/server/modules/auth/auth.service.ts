@@ -1,9 +1,9 @@
-import { UserLoginDto, UserRegisterDto } from './auth.types';
 import bcrypt from 'bcrypt';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { userTransform } from './auth.transform';
-import { CustomError, Unauthorized } from '@/error';
+import jwt from 'jsonwebtoken';
+import { Unauthorized } from '@/error';
 import { userRepository } from '../user/user.repository';
+import { userTransform } from '../user/user.transform';
+import { UserLoginDto, UserRegisterDto } from './auth.types';
 
 const jwtSecret = process.env.JWT_SECRET ?? 'secret';
 const jwtExpiration = process.env.JWT_EXPIRATION ?? '1d';
@@ -53,25 +53,4 @@ export const registerService = async (data: UserRegisterDto) => {
         token,
         user: userTransform(user),
     };
-};
-
-export const meService = async (authHeader: string | null) => {
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        throw new Unauthorized('Token não fornecido');
-    }
-
-    const token = authHeader.split(' ')[1];
-
-    try {
-        const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
-
-        const user = await userRepository.findById(decoded.id);
-        if (!user) {
-            throw new Unauthorized('Usuário não encontrado');
-        }
-
-        return userTransform(user);
-    } catch (error: any) {
-        throw new CustomError(error);
-    }
 };
