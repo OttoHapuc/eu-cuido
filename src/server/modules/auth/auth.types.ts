@@ -1,11 +1,4 @@
-export interface User {
-    id: number;
-    name: string;
-    email: string;
-    status: string;
-    created_at: Date;
-    updated_at: Date;
-}
+import { User } from "../user/user.types";
 
 export interface UserLoginDto {
     email: string;
